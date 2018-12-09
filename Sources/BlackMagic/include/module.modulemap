@@ -1,0 +1,4 @@
+module BlackMagic {
+    umbrella "/Users/grantbutler/Code/grantjbutler/BlackMagic/Sources/BlackMagic/include/BlackMagic"
+    export *
+}

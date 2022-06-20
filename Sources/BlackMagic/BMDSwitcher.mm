@@ -16,6 +16,12 @@
 
 @implementation BMDSwitcher
 
++ (void)switcherAtAddress:(NSString *)deviceAddress completion:(void(^)(BMDSwitcher * _Nullable))completion {
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+        completion([BMDSwitcher switcherAtAddress:deviceAddress]);
+    });
+}
+
 + (nullable instancetype)switcherAtAddress:(NSString *)deviceAddress {
     IBMDSwitcherDiscovery *discovery = CreateBMDSwitcherDiscoveryInstance();
     if (discovery == NULL) {

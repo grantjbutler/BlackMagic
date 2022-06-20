@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface BMDSwitcher : NSObject
 
++ (void)switcherAtAddress:(NSString *)deviceAddress completion:(void(^)(BMDSwitcher * _Nullable))completion;
 + (nullable instancetype)switcherAtAddress:(NSString *)deviceAddress;
 
 @property (strong, readonly) NSString *productName;

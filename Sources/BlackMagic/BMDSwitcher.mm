@@ -22,12 +22,16 @@
         return nil;
     }
     
-    IBMDSwitcher *switcher;
-    if (discovery->ConnectTo((__bridge CFStringRef)deviceAddress, &switcher, NULL) != S_OK) {
+    IBMDSwitcher *iswitcher;
+    if (discovery->ConnectTo((__bridge CFStringRef)deviceAddress, &iswitcher, NULL) != S_OK) {
+        discovery->Release();
         return nil;
     }
     
-    return [[BMDSwitcher alloc] initWithSwitcher:switcher];
+    BMDSwitcher *switcher = [[BMDSwitcher alloc] initWithSwitcher:iswitcher];
+    iswitcher->Release();
+    discovery->Release();
+    return switcher;
 }
 
 - (instancetype)initWithSwitcher:(IBMDSwitcher *)switcher {

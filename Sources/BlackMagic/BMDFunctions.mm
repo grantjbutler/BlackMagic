@@ -9,5 +9,11 @@
 #include "BMDSwitcherAPI.h"
 
 BOOL BMDIsSDKInstalled(void) {
-    return CreateBMDSwitcherDiscoveryInstance() != NULL;
+    IBMDSwitcherDiscovery *discovery = CreateBMDSwitcherDiscoveryInstance();
+    if (!discovery) {
+        return NO;
+    }
+    
+    discovery->Release();
+    return YES;
 }

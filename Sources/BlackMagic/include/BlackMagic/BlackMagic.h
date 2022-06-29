@@ -8,6 +8,7 @@
 #ifndef BlackMagic_h
 #define BlackMagic_h
 
+#import <BlackMagic/BMDError.h>
 #import <BlackMagic/BMDFunctions.h>
 #import <BlackMagic/BMDSwitcher.h>
 

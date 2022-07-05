@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class BMDSwitcherInput;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BMDSwitcher : NSObject
@@ -15,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable instancetype)switcherAtAddress:(NSString *)deviceAddress error:(NSError ** _Nullable)error;
 
 @property (strong, readonly) NSString *productName;
+
+@property (strong, readonly) NSArray<BMDSwitcherInput *> *inputs;
 
 @end
 

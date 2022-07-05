@@ -5,12 +5,16 @@
 //  Created by Grant Butler on 12/9/18.
 //
 
-#import "BlackMagic/BMDSwitcher.h"
 #include "BMDSwitcherAPI.h"
+#import "BlackMagic/BMDSwitcher.h"
 #import "BlackMagic/BMDError.h"
+#import "BlackMagic/BMDSwitcherInput.h"
+
+#import "BMDSwitcherInput+Private.h"
 
 @interface BMDSwitcher () {
     IBMDSwitcher *_switcher;
+    NSArray<BMDSwitcherInput *> *_inputs;
 }
 
 @end
@@ -37,7 +41,7 @@
     
     IBMDSwitcher *iswitcher;
     BMDSwitcherConnectToFailure connectionError = 0;
-    if (discovery->ConnectTo((__bridge CFStringRef)deviceAddress, &iswitcher, &connectionError) != S_OK) {
+    if (FAILED(discovery->ConnectTo((__bridge CFStringRef)deviceAddress, &iswitcher, &connectionError))) {
         if (error) {
             switch (connectionError) {
             case bmdSwitcherConnectToFailureNoResponse:
@@ -92,11 +96,35 @@
 
 - (NSString *)productName {
     CFStringRef productName;
-    if (_switcher->GetProductName(&productName) != S_OK) {
+    if (FAILED(_switcher->GetProductName(&productName))) {
         return @"";
     }
     
     return (__bridge NSString *)productName;
+}
+
+- (NSArray<BMDSwitcherInput *> *)inputs {
+    if (!_inputs) {
+        IBMDSwitcherInputIterator* inputIterator = NULL;
+        HRESULT result = _switcher->CreateIterator(IID_IBMDSwitcherInputIterator, (void**)&inputIterator);
+        if (FAILED(result)) { return @[]; }
+        
+        NSMutableArray<BMDSwitcherInput *> *inputs = [NSMutableArray array];
+        
+        IBMDSwitcherInput* input = NULL;
+        
+        // For every input, install a callback to monitor property changes on the input
+        while (S_OK == inputIterator->Next(&input)) {
+            [inputs addObject:[[BMDSwitcherInput alloc] initWithInput:input]];
+            input->Release();
+        }
+        inputIterator->Release();
+        inputIterator = NULL;
+        
+        _inputs = [inputs copy];
+	}
+        
+    return _inputs;
 }
 
 @end
